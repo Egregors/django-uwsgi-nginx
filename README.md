@@ -18,7 +18,10 @@ contribute patches.
 
 ### Build and run
 * docker build -t webapp .
-* docker run -d webapp
+* docker run -d -p 80:80 webapp
+
+### How to attach to container
+* docker exce -it CONT_ID bash
 
 ### How to insert your application
 

@@ -16,20 +16,26 @@ FROM ubuntu:trusty
 
 MAINTAINER Egregors (llamaontheboat@gmail.com)
 
-RUN apt-get update
-RUN apt-get install -y build-essential git
-RUN apt-get install -y python python-dev python-setuptools
-RUN apt-get install -y nginx supervisor
+RUN apt-get update && apt-get install -y \
+build-essential \
+git \
+python \
+python-dev \
+python-setuptools \
+nginx \
+supervisor
+
 RUN easy_install pip
 
 # install uwsgi now because it takes a little while
 RUN pip install uwsgi
 
 # install nginx
-RUN apt-get install -y python-software-properties
-RUN apt-get install -y software-properties-common
-RUN apt-get update
-RUN add-apt-repository -y ppa:nginx/stable
+RUN apt-get update && apt-get install -y \
+python-software-properties \
+software-properties-common
+
+RUN apt-get update && add-apt-repository -y ppa:nginx/stable
 
 # install database
 RUN apt-get install -y sqlite3

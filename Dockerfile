@@ -12,57 +12,57 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ubuntu:trusty
+FROM ubuntu:trusty
 
-maintainer Egregors (llamaontheboat@gmail.com)
+MAINTAINER Egregors (llamaontheboat@gmail.com)
 
-run apt-get update
-run apt-get install -y build-essential git
-run apt-get install -y python python-dev python-setuptools
-run apt-get install -y nginx supervisor
-run easy_install pip
+RUN apt-get update
+RUN apt-get install -y build-essential git
+RUN apt-get install -y python python-dev python-setuptools
+RUN apt-get install -y nginx supervisor
+RUN easy_install pip
 
 # install uwsgi now because it takes a little while
-run pip install uwsgi
+RUN pip install uwsgi
 
 # install nginx
-run apt-get install -y python-software-properties
-run apt-get install -y software-properties-common
-run apt-get update
+RUN apt-get install -y python-software-properties
+RUN apt-get install -y software-properties-common
+RUN apt-get update
 RUN add-apt-repository -y ppa:nginx/stable
 
 # install database
-run apt-get install -y sqlite3
+RUN apt-get install -y sqlite3
 
 # Install specific lib's for current app
 # Install staff for work with images (need for ckeditor in Django)
-run apt-get install -y libjpeg-dev zlib1g-dev libpng12-dev
+RUN apt-get install -y libjpeg-dev zlib1g-dev libpng12-dev
 
 # install our code
 # from host folder
-add . /home/docker/code/
+ADD . /home/docker/code/
 # or from git
-# run cd /home/docker/code/app && git clone URL
+# RUN cd /home/docker/code/app && git clone URL
 
 # setup all the configfiles
-run echo "daemon off;" >> /etc/nginx/nginx.conf
-run rm /etc/nginx/sites-enabled/default
-run ln -s /home/docker/code/nginx-app.conf /etc/nginx/sites-enabled/
-run ln -s /home/docker/code/supervisor-app.conf /etc/supervisor/conf.d/
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+RUN rm /etc/nginx/sites-enabled/default
+RUN ln -s /home/docker/code/nginx-app.conf /etc/nginx/sites-enabled/
+RUN ln -s /home/docker/code/supervisor-app.conf /etc/supervisor/conf.d/
 
-# run pip install
-run pip install -r /home/docker/code/app/requirements.txt
+# RUN pip install
+RUN pip install -r /home/docker/code/app/requirements.txt
 
 # install django, normally you would remove this step because your project would already
 # be installed in the code/app/ directory
-# run django-admin.py startproject app /home/docker/code/app/ 
-run cd /home/docker/code/app && ./manage.py syncdb --noinput
-run cd /home/docker/code/app && ./manage.py collectstatic --noinput
+# RUN django-admin.py startproject app /home/docker/code/app/ 
+RUN cd /home/docker/code/app && ./manage.py syncdb --noinput
+RUN cd /home/docker/code/app && ./manage.py collectstatic --noinput
 
 # Turn off debug mode
 # !!! Change «myproject» to name of your project
-run echo "DEBUG = False" >> /home/docker/code/app/myproject/settings.py
-run echo "TEMPLATE_DEBUG = False" >> /home/docker/code/app/myproject/settings.py
+RUN echo "DEBUG = False" >> /home/docker/code/app/myproject/settings.py
+RUN echo "TEMPLATE_DEBUG = False" >> /home/docker/code/app/myproject/settings.py
 
-expose 80
-cmd ["supervisord", "-n"]
+EXPOSE 80
+CMD ["supervisord", "-n"]

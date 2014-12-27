@@ -20,8 +20,12 @@ contribute patches.
 * docker build -t webapp .
 * docker run -d -p 80:80 webapp
 
+
+
 ### How to attach to container
-* docker exce -it CONT_ID bash
+* docker exce -it CONT_ID /bin/bash
+
+
 
 ### How to insert your application
 
@@ -29,6 +33,12 @@ In /app currently a django project is created with startproject. You will
 probably want to replace the content of /app with the root of your django
 project.
 
+* Change project name in Dockerfile if necessary:
+line 64-65, myproject -> NAME_YOUR_APP
+
 uWSGI chdirs to /app so in uwsgi.ini you will need to make sure the python path
 to the wsgi.py file is relative to that.
+
+* Change name of callable module in uwsgi.ini:
+line 29, website -> NAME_YOUR_APP
 

@@ -16,6 +16,12 @@ FROM ubuntu:trusty
 
 MAINTAINER Egregors (llamaontheboat@gmail.com)
 
+# Set the locale, for ru-lang projects
+RUN locale-gen ru_RU.UTF-8
+ENV LANG ru_RU.UTF-8
+ENV LANGUAGE ru_RU:ru
+ENV LC_ALL ru_RU.UTF-8
+
 RUN apt-get update && apt-get install -y \
 build-essential \
 git \
@@ -66,9 +72,9 @@ RUN cd /home/docker/code/app && ./manage.py syncdb --noinput
 RUN cd /home/docker/code/app && ./manage.py collectstatic --noinput
 
 # Turn off debug mode
-# !!! Change «myproject» to name of your project
-RUN echo "DEBUG = False" >> /home/docker/code/app/myproject/settings.py
-RUN echo "TEMPLATE_DEBUG = False" >> /home/docker/code/app/myproject/settings.py
+# !!! Change "LlamaLab" to name of your project
+RUN echo "DEBUG = False" >> /home/docker/code/app/LlamaLab/settings.py
+RUN echo "TEMPLATE_DEBUG = False" >> /home/docker/code/app/LlamaLab/settings.py
 
 EXPOSE 80
 CMD ["supervisord", "-n"]
